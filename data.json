@@ -1,0 +1,642 @@
+{
+  "slides": [
+    {
+      "id": 1,
+      "title": "Ethical AI Impact Assessment",
+      "contentAlign": "center",
+      "nameBadge": null,
+      "isSlide1": true,
+      "sections": [
+        {
+          "type": "image",
+          "src": "image.png",
+          "alt": "Presentation Image"
+        },
+        {
+          "type": "title",
+          "text": "Ethical AI Impact Assessment",
+          "subtitle": "City of Ottawa GenAI Internal Research Tool"
+        },
+        {
+          "type": "infoBox",
+          "items": [
+            {
+              "label": "Team Members",
+              "value": "Jiaxing Yi, HyeRan Yoo, Huaqing Zheng, Peng Wang"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Project Overview and Objectives",
+      "contentAlign": "center",
+      "nameBadge": "Jiaxing Yi",
+      "sections": [
+        {
+          "type": "heading",
+          "text": "Project Overview and Objectives",
+          "level": 2
+        },
+        {
+          "type": "grid",
+          "columns": 2,
+          "items": [
+            {
+              "type": "contentBox",
+              "title": "Project Description",
+              "content": "The City of Ottawa GenAI Internal Research Tool is a large language model system using <strong>Retrieval-Augmented Generation (RAG)</strong> technology. It supports municipal staff in conducting research, policy analysis, and drafting internal reports by querying municipal documents in natural language and receiving synthesized answers with citations. The system enables faster access to institutional knowledge distributed across many documents and systems, helping policy analysts make evidence-based decisions more efficiently."
+            },
+            {
+              "type": "image",
+              "src": "CityOfOttawa.png",
+              "alt": "City of Ottawa Website",
+              "style": "max-width: 350px; width: 100%; height: auto; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); border: 2px solid rgba(0, 105, 148, 0.2);"
+            }
+          ]
+        },
+        {
+          "type": "contentWrapper",
+          "items": [
+            {
+              "type": "contentBox",
+              "title": "Problems Being Solved",
+              "listType": "ul",
+              "items": [
+                "<strong>Inefficient Information Retrieval:</strong> Manual searching through lengthy municipal documents is time-consuming and labor-intensive",
+                "<strong>Knowledge Accessibility:</strong> Institutional knowledge is distributed across many documents and systems, making it difficult to find relevant information quickly",
+                "<strong>Research Speed:</strong> Policy analysts need faster access to relevant information for decision-making, especially when preparing reports for city council",
+                "<strong>Consistency:</strong> Standardizing how staff access and reference municipal policies ensures uniform interpretation and application across departments"
+              ]
+            },
+            {
+              "type": "contentBox",
+              "title": "Main Ethical Questions",
+              "listType": "ol",
+              "items": [
+                "How to protect privacy and confidentiality of municipal records?",
+                "What measures prevent bias and ensure equitable representation?",
+                "How to ensure verifiability and accountability in AI-assisted decisions?",
+                "What governance mechanisms maintain transparency and public trust?"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "System Background and Technical Context",
+      "contentAlign": "center",
+      "nameBadge": "HyeRan Yoo",
+      "sections": [
+        {
+          "type": "heading",
+          "text": "System Background and Technical Context",
+          "level": 2
+        },
+        {
+          "type": "contentWrapper",
+          "items": [
+            {
+              "type": "contentBox",
+              "title": "System Architecture (LLM + RAG)",
+              "flowDiagram": {
+                "steps": [
+                  { "title": "1. Data Ingestion", "subtitle": "Documents indexed" },
+                  { "title": "2. Retrieval", "subtitle": "Semantic search" },
+                  { "title": "3. Generation", "subtitle": "LLM with citations" }
+                ]
+              }
+            },
+            {
+              "type": "contentBox",
+              "title": "Key Technical Features Influencing Ethics",
+              "listType": "ul",
+              "items": [
+                "<strong>Retrieval and Indexing:</strong> Coverage decisions affect bias - underrepresented communities or policy areas will be systematically overlooked if not well-documented in the indexed corpus",
+                "<strong>Prompt Controls:</strong> System prompts influence how the model handles uncertainty and points to sources, affecting the reliability of generated responses",
+                "<strong>Access Controls:</strong> Role-based permissions and query logging determine who can access what information, directly impacting privacy protection",
+                "<strong>Model Lifecycle:</strong> LLM updates can alter behavior without obvious signals to users, potentially changing how the system interprets queries or generates responses"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "text": "Stakeholder Mapping",
+          "level": 2
+        },
+        {
+          "type": "contentWrapper",
+          "items": [
+            {
+              "type": "contentBox",
+              "title": "Internal Stakeholders",
+              "listType": "ul",
+              "items": [
+                "<strong>Primary Users:</strong> Policy analysts, planners, project managers, frontline staff",
+                "<strong>Compliance Teams:</strong> Legal counsel, ATIP officers, corporate security",
+                "<strong>Technical Teams:</strong> IT, Data, and Innovation team",
+                "<strong>Leadership:</strong> Senior management, elected officials"
+              ]
+            },
+            {
+              "type": "contentBox",
+              "title": "External Stakeholders",
+              "listType": "ul",
+              "items": [
+                "<strong>Ottawa Residents:</strong> Affected by policies developed with AI assistance",
+                "<strong>Community Organizations:</strong> Monitor fairness, transparency, service quality",
+                "<strong>Regulatory Bodies:</strong> Information and Privacy Commissioner of Ontario, provincial regulators",
+                "<strong>Vendors:</strong> Cloud service providers and model suppliers"
+              ]
+            },
+            {
+              "type": "grid",
+              "columns": 2,
+              "items": [
+                {
+                  "type": "contentBox",
+                  "color": "green",
+                  "title": "Primary Beneficiaries",
+                  "content": "Policy analysts and IT teams gain efficiency and easier access to knowledge. Senior leadership benefits from faster reporting and positive image."
+                },
+                {
+                  "type": "contentBox",
+                  "color": "red",
+                  "title": "Higher Risk Bearers",
+                  "content": "Residents and community groups bear privacy risks, misinformation, and biased analysis consequences. Frontline workers face surveillance and work pressures if AI outputs become performance benchmarks. Compliance officers have limited influence over technical design despite responsibility for violations."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "text": "Data Flow and Sensitive Information",
+          "level": 2
+        },
+        {
+          "type": "contentWrapper",
+          "items": [
+            {
+              "type": "contentBox",
+              "title": "Data Flow Process",
+              "listType": "ol",
+              "items": [
+                "<strong>Data Ingestion:</strong> Municipal documents (council minutes, policy manuals, briefings) are collected and imported into secure index",
+                "<strong>Storage:</strong> Documents stored in versioned system within city's secure environment",
+                "<strong>RAG Processing:</strong> Semantic search retrieves relevant excerpts, ranked and assembled with user query",
+                "<strong>User Interaction:</strong> LLM generates answers with citations; queries and responses may be logged"
+              ]
+            },
+            {
+              "type": "contentBox",
+              "title": "Sensitive Information Types",
+              "listType": "ul",
+              "items": [
+                "<strong>Personal Information:</strong> Resident data (names, addresses), employee records, contractor information",
+                "<strong>Confidential Municipal Records:</strong> Internal policy drafts, legal advice, financial information, security documents",
+                "<strong>Business Information:</strong> Proprietary vendor data, economic development negotiations"
+              ]
+            },
+            {
+              "type": "contentBox",
+              "title": "Privacy Concerns (MFIPPA)",
+              "content": "Under <strong>MFIPPA (Municipal Freedom of Information and Protection of Privacy Act)</strong>, personal information must be protected from unauthorized use or disclosure. Risks exist at multiple layers: <strong>Document Storage</strong> - indexed content may contain sensitive information; <strong>Retrieval Layer</strong> - retrieved documents may expose information beyond authorized scope; <strong>Interaction Logs</strong> - questions and responses may contain personal or sensitive information that must be protected."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Ethical Risk Analysis",
+      "contentAlign": "left",
+      "nameBadge": "Huaqing Zheng",
+      "sections": [
+        {
+          "type": "heading",
+          "text": "Ethical Risk Analysis",
+          "level": 2
+        },
+        {
+          "type": "contentWrapper",
+          "items": [
+            {
+              "type": "contentBox",
+              "color": "yellow",
+              "title": "🔒 Privacy and Confidentiality Risks",
+              "items": [
+                {
+                  "label": "Risk Description",
+                  "text": "Employee queries may inadvertently leak sensitive information or circumvent traditional \"need-to-know\" boundaries, allowing personal information to be searchable beyond authorized scope."
+                },
+                {
+                  "label": "Scenario",
+                  "text": "A policy analyst queries \"affordable housing eligibility criteria in downtown Ottawa.\" The system retrieves internal reports containing personal information about specific residents who applied for housing assistance. The analyst, who should not have access under normal controls, can now see resident names, addresses, and application details."
+                },
+                {
+                  "label": "Impact",
+                  "text": "Privacy rights violations, compliance risks, loss of public trust, legal liability under MFIPPA"
+                }
+              ]
+            },
+            {
+              "type": "contentBox",
+              "color": "yellow",
+              "title": "⚖️ Bias and Inequitable Policy Impacts",
+              "items": [
+                {
+                  "label": "Risk Description",
+                  "text": "GenAI systems inherit patterns from historically biased data. Decision support systems trained on biased data often replicate or amplify inequalities, even without explicit sensitive attributes."
+                },
+                {
+                  "label": "Scenario",
+                  "text": "The indexed corpus contains disproportionately high reports on certain neighborhoods. When an analyst queries \"areas requiring urban planning attention,\" the tool consistently flags these same neighborhoods as \"problem areas,\" overlooking communities with similar needs but less historical documentation."
+                },
+                {
+                  "label": "Impact",
+                  "text": "Underrepresented communities further overlooked, less equitable resource allocation, biased outcomes disguised as \"neutral insights,\" erosion of citizen trust"
+                }
+              ]
+            },
+            {
+              "type": "contentBox",
+              "color": "yellow",
+              "title": "⚠️ Hallucinations, Verifiability, and Accountability",
+              "items": [
+                {
+                  "label": "Risk Description",
+                  "text": "LLMs frequently generate fluent yet false statements with high confidence. This structural feature poses danger in law and public policy where references must be precise and verifiable."
+                },
+                {
+                  "label": "Scenario",
+                  "text": "An analyst queries \"zoning requirements for mixed-use development.\" The system generates a confident summary with a specific bylaw citation. The analyst uses this in a memo to city council, but the citation is incorrect and criteria are outdated, potentially leading to incorrect policy decisions."
+                },
+                {
+                  "label": "Impact",
+                  "text": "Compromised decision accuracy, eroded trust in municipal expertise, legal liability, difficulty assigning responsibility due to LLM opacity"
+                }
+              ]
+            },
+            {
+              "type": "contentBox",
+              "color": "yellow",
+              "title": "🔍 Transparency and Explainability",
+              "items": [
+                {
+                  "label": "Risk Description",
+                  "text": "The opacity of large language models complicates transparency and public trust. When residents are affected by decisions made through opaque models, accountability becomes difficult."
+                },
+                {
+                  "label": "Impact",
+                  "text": "Undermined citizen confidence, difficult to challenge or appeal decisions, compliance challenges with public sector accountability expectations"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "text": "Risk Register Summary",
+          "level": 2
+        },
+        {
+          "type": "table",
+          "headers": ["Risk ID", "Risk Description", "Likelihood", "Impact"],
+          "rows": [
+            {
+              "id": "R4",
+              "description": "Hallucinated information presented as factual",
+              "likelihood": "High",
+              "impact": "High",
+              "highlight": true
+            },
+            {
+              "id": "R3",
+              "description": "Bias in policy recommendations due to unrepresentative data",
+              "likelihood": "High",
+              "impact": "Medium"
+            },
+            {
+              "id": "R5",
+              "description": "Over-reliance on AI outputs (automation bias)",
+              "likelihood": "High",
+              "impact": "Medium"
+            },
+            {
+              "id": "R1",
+              "description": "Unauthorized access to personal information through AI queries",
+              "likelihood": "Medium",
+              "impact": "High"
+            },
+            {
+              "id": "R2",
+              "description": "Privacy breach through data retention in LLM or logs",
+              "likelihood": "Medium",
+              "impact": "High"
+            }
+          ]
+        },
+        {
+          "type": "priorityBox",
+          "title": "Key Findings",
+          "items": [
+            "<strong>Highest Priority:</strong> Hallucinated information (High/High) - LLMs structurally prone to false but confident statements",
+            "<strong>High Likelihood Risks:</strong> Bias and automation bias reflect systematic human-AI interaction patterns",
+            "<strong>High Impact Privacy Risks:</strong> Unauthorized access and data retention violate MFIPPA requirements"
+          ]
+        },
+        {
+          "type": "heading",
+          "text": "Regulatory and Policy Context",
+          "level": 2
+        },
+        {
+          "type": "contentWrapper",
+          "items": [
+            {
+              "type": "contentBox",
+              "title": "MFIPPA (Municipal Freedom of Information and Protection of Privacy Act)",
+              "listType": "ul",
+              "items": [
+                "Municipal authorities must provide access to records AND protect personal information",
+                "System must enforce access controls consistent with MFIPPA requirements",
+                "Query logs and interaction records must comply with privacy protection standards",
+                "ATIP office oversees privacy obligations and system design must align with municipal data protection policies"
+              ]
+            },
+            {
+              "type": "contentBox",
+              "title": "AODA (Accessibility for Ontarians with Disabilities Act)",
+              "listType": "ul",
+              "items": [
+                "System interface must be accessible to users with disabilities",
+                "Generated content should be accessible and understandable",
+                "Compliance with WCAG accessibility standards required for public sector systems"
+              ]
+            },
+            {
+              "type": "contentBox",
+              "title": "City of Ottawa Internal Policies",
+              "listType": "ul",
+              "items": [
+                "ATIP office oversees privacy obligations and access to information requests",
+                "System design must align with municipal data protection policies and corporate security standards",
+                "Corporate security policies apply to system infrastructure, access controls, and data handling procedures"
+              ]
+            },
+            {
+              "type": "contentBox",
+              "title": "Regulatory Impact on System Design",
+              "listType": "ul",
+              "items": [
+                "<strong>Access Control Design:</strong> Must respect \"need-to-know\" boundaries, prevent circumvention through AI queries",
+                "<strong>Data Minimization:</strong> Only necessary personal information should be indexed; logging minimized and anonymized",
+                "<strong>Transparency Requirements:</strong> Documentation, audit trails, mechanisms for challenging AI-assisted decisions",
+                "<strong>Accountability Structures:</strong> Clear responsibility assignment for AI-generated content and decision support"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Ethical Tools and Mitigation Strategies",
+      "contentAlign": "center",
+      "nameBadge": "Peng Wang",
+      "sections": [
+        {
+          "type": "heading",
+          "text": "Ethical Tools and Mitigation Strategies",
+          "level": 2
+        },
+        {
+          "type": "contentWrapper",
+          "items": [
+            {
+              "type": "contentBox",
+              "color": "blue",
+              "title": "🔍 Aequitas - Fairness Audits",
+              "content": "<strong>Tool:</strong> Aequitas is an open-source bias auditing toolkit calculating group fairness metrics.<br><br><strong>Application:</strong> Audit structured outputs (e.g., \"high priority\" classifications, \"problem area\" flags) alongside demographic/geographic metadata to detect systematic bias in policy recommendations.<br><br><strong>Limitations:</strong> Requires structured outputs; audits are retrospective; surrogate metrics may not capture all fairness dimensions.",
+              "footer": "Mitigates: R3 (Bias), R5 (Automation bias)"
+            },
+            {
+              "type": "contentBox",
+              "color": "blue",
+              "title": "💡 LIME - Interpretability Workflows",
+              "content": "<strong>Tool:</strong> LIME (Local Interpretable Model-agnostic Explanations) provides localized explanations for model predictions.<br><br><strong>Application:</strong> Display which input paragraphs/terms contributed to outputs, with links to original records, helping users verify AI-generated content and understand decision rationale.<br><br><strong>Limitations:</strong> Local explanations may be unstable; increases computational overhead; may be misinterpreted as guarantees.",
+              "footer": "Mitigates: R4 (Hallucinations), R6 (Transparency), R5 (Over-reliance), R3 (Bias)"
+            },
+            {
+              "type": "contentBox",
+              "color": "blue",
+              "title": "🔐 Differential Access Controls and Logging",
+              "content": "<strong>Strategy:</strong> Role-based access controls varying by document sensitivity; differential logging (minimal for low-risk queries, detailed for high-risk interactions).<br><br><strong>Implementation:</strong> Enforce \"need-to-know\" boundaries at retrieval layer, prevent circumvention through AI queries, minimize personal information in logs, anonymize where feasible.<br><br><strong>Limitations:</strong> May reduce system utility if too restrictive; logging creates its own privacy concerns.",
+              "footer": "Mitigates: R1 (Unauthorized access), R2 (Data retention), R4 (Hallucinated information)"
+            },
+            {
+              "type": "contentBox",
+              "color": "blue",
+              "title": "👥 Human-in-the-Loop Review",
+              "content": "<strong>Strategy:</strong> Mandatory human review for high-risk outputs (eligibility determinations, sensitive communities, policy recommendations).<br><br><strong>Requirements:</strong> Users must verify critical information against source records before using AI outputs in official recommendations; explicit approval workflows for high-risk use cases; comprehensive training on privacy obligations, bias concepts, and explanation interpretation.<br><br><strong>Limitations:</strong> May reduce efficiency gains; requires training and clear guidelines; reviewers may still exhibit automation bias.",
+              "footer": "Mitigates: R4 (Hallucinations), R5 (Automation bias), R3 (Bias), R1 (Unauthorized access)"
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "text": "Governance Workflow and Accountability",
+          "level": 2
+        },
+        {
+          "type": "contentWrapper",
+          "items": [
+            {
+              "type": "contentBox",
+              "title": "Governance Workflow",
+              "listType": "ul",
+              "items": [
+                "<strong>Data Review and Approval:</strong> Data governance team, ATIP officers, and legal counsel review before adding datasets. Privacy impact assessment required for datasets containing personal information to ensure MFIPPA compliance.",
+                "<strong>Model Updates:</strong> IT team, data governance team, senior management approve changes. Ethical and privacy impact assessments, testing, and staged deployment required to prevent unintended consequences.",
+                "<strong>Monitoring and Incident Handling:</strong> Continuous monitoring of access patterns and query logs to detect anomalies. Incident response team (IT, legal, privacy officers) responds to breaches, bias issues, and errors with clear remediation protocols.",
+                "<strong>Escalation Paths:</strong> Technical issues (User → IT Support → IT Lead → Senior Management); Privacy concerns (User → ATIP Officer → Privacy Commissioner → Legal Counsel); Bias/fairness (User → Data Governance → Equity Office → Senior Management)"
+              ]
+            },
+            {
+              "type": "contentBox",
+              "title": "Accountability Roles",
+              "listType": "ul",
+              "items": [
+                "<strong>System Owners (IT Team):</strong> Technical implementation, infrastructure security, system performance, and reliability",
+                "<strong>Data Protection Officers (ATIP Office):</strong> Privacy compliance, access control enforcement, breach response, and MFIPPA compliance",
+                "<strong>Policy Owners (Department Managers):</strong> Appropriate use of system, verification of AI outputs, final responsibility for recommendations made to city council",
+                "<strong>End Users:</strong> Understanding system limitations, verifying critical information against source records, reporting errors and problematic outputs",
+                "<strong>Senior Management:</strong> Strategic direction, final accountability for system deployment, legal and financial liability for AI-assisted decisions"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "text": "Recommendations and Guidelines",
+          "level": 2
+        },
+        {
+          "type": "contentWrapper",
+          "items": [
+            {
+              "type": "contentBox",
+              "title": "Data & Access Governance (High-Priority Actions)",
+              "listType": "ul",
+              "items": [
+                "Enforce role-based permissions at retrieval layer and user interface to prevent unauthorized access",
+                "Classify all indexed corpora according to MFIPPA-based access rules, ensuring sensitive information is properly protected",
+                "Minimize logging, anonymize where feasible, implement strict retention limits to reduce privacy risks",
+                "Complete privacy and algorithmic impact assessments before major deployments to identify and mitigate risks proactively"
+              ]
+            },
+            {
+              "type": "contentBox",
+              "title": "System & Model Design (High-Priority Actions)",
+              "listType": "ul",
+              "items": [
+                "Limit retrieval to curated, versioned municipal corpora to ensure accuracy and prevent access to unauthorized documents",
+                "Include source citations in all responses, display uncertainty/confidence metrics to help users assess reliability",
+                "Integrate LIME-style explanations for critical queries to show which inputs contributed to outputs",
+                "Conduct regular fairness audits using Aequitas for structured outputs to detect and address bias systematically"
+              ]
+            },
+            {
+              "type": "contentBox",
+              "title": "Human Oversight (High-Priority Actions)",
+              "listType": "ul",
+              "items": [
+                "Require verification against source records before using AI outputs in official recommendations to prevent hallucination errors",
+                "Mandate explicit approval workflows for high-risk use cases (eligibility determinations, policy recommendations) to ensure human accountability",
+                "Provide comprehensive training on privacy obligations, bias concepts, explanation interpretation, and system limitations to all users"
+              ]
+            },
+            {
+              "type": "contentBox",
+              "title": "Recommended Improvements",
+              "listType": "ul",
+              "items": [
+                "Implement automated monitoring of access patterns and query types to detect anomalies and potential misuse",
+                "Develop Model Cards and System Cards documenting capabilities, limitations, and risks for transparency",
+                "Establish regular review cycles: monthly usage patterns, quarterly fairness audits, annual comprehensive assessments",
+                "Create channels for user feedback and reporting problematic outputs to enable continuous improvement"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "Conclusion",
+      "contentAlign": "center",
+      "nameBadge": "Jiaxing Yi",
+      "sections": [
+        {
+          "type": "heading",
+          "text": "Conclusion",
+          "level": 2
+        },
+        {
+          "type": "conclusion",
+          "summary": {
+            "title": "Summary of Key Findings",
+            "text": "The City of Ottawa GenAI Internal Research Tool offers significant advantages in efficiency, institutional memory preservation, and evidence-based policy-making. However, <strong>three primary ethical concerns</strong> require attention:",
+            "boxes": [
+              {
+                "icon": "🔒",
+                "title": "Privacy & Confidentiality",
+                "text": "System processes sensitive municipal records requiring robust access controls and privacy protection to comply with MFIPPA. Stakeholder analysis shows efficiency gains concentrated among internal staff, while residents disproportionately bear privacy risks."
+              },
+              {
+                "icon": "⚖️",
+                "title": "Bias & Representation",
+                "text": "AI-assisted analysis may perpetuate inequalities if historical data reflects biases. Underrepresented communities may be further overlooked, leading to less equitable resource allocation and erosion of citizen trust."
+              },
+              {
+                "icon": "⚠️",
+                "title": "Hallucination & Accountability",
+                "text": "LLMs are prone to false but confident statements, creating risks when outputs influence policy decisions. This structural feature poses danger in law and public policy where references must be precise and verifiable."
+              }
+            ]
+          },
+          "requirements": {
+            "title": "Critical Requirements",
+            "text": "At the municipal level, these issues directly impact legal compliance, distributive justice, and democratic legitimacy. The City cannot treat this as a one-off innovation project but must manage it as an <strong>ongoing socio-technical system</strong> with:",
+            "items": [
+              "Continuous monitoring of privacy safeguards and equity metrics to detect and address issues proactively",
+              "Clear remediation pathways when harm occurs, ensuring accountability and trust restoration",
+              "Multi-layered technical, organizational, and procedural safeguards preventing single points of failure",
+              "Comprehensive data and access governance as highest priority to protect resident privacy",
+              "System safeguards preventing bias, ensuring transparency, and enabling verification of AI outputs",
+              "Human oversight workflows treating GenAI as decision support tool, not autonomous decision-maker",
+              "Clear accountability structures across all roles from end users to senior management"
+            ]
+          },
+          "closing": {
+            "title": "Final Recommendations",
+            "subtitle": "To leverage GenAI while fulfilling obligations to protect rights, ensure accountability, and maintain public trust, the City must:"
+          },
+          "finalRecommendations": {
+            "title": "Implementation Priorities",
+            "items": [
+              "Implement comprehensive data and access governance as highest priority",
+              "Design system safeguards preventing bias, ensuring transparency, enabling verification",
+              "Establish human oversight workflows treating GenAI as decision support, not decision-maker",
+              "Create clear accountability structures across all roles",
+              "Maintain continuous monitoring and improvement processes"
+            ]
+          },
+          "thankYou": {
+            "title": "Thank You",
+            "subtitle": "Questions & Discussion"
+          }
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "title": "References",
+      "contentAlign": "left",
+      "nameBadge": null,
+      "sections": [
+        {
+          "type": "heading",
+          "text": "References",
+          "level": 2
+        },
+        {
+          "type": "references",
+          "items": [
+            "Amazon Web Services. (n.d.). What is RAG (retrieval-augmented generation)? AWS. <a href=\"https://aws.amazon.com/what-is/retrieval-augmented-generation/\" target=\"_blank\">https://aws.amazon.com/what-is/retrieval-augmented-generation/</a>",
+            "Microsoft. (n.d.). Retrieval augmented generation (RAG) in Azure AI Search. Microsoft Learn. <a href=\"https://learn.microsoft.com/en-us/azure/search/retrieval-augmented-generation-overview\" target=\"_blank\">https://learn.microsoft.com/en-us/azure/search/retrieval-augmented-generation-overview</a>",
+            "Municipal Freedom of Information and Protection of Privacy Act, R.S.O. 1990, c. M.56 (Ontario). <a href=\"https://www.ontario.ca/laws/statute/90m56\" target=\"_blank\">https://www.ontario.ca/laws/statute/90m56</a>",
+            "Information and Privacy Commissioner of Ontario. (2014). Ontario's Municipal Freedom of Information and Protection of Privacy Act: A mini guide. <a href=\"https://www.ipc.on.ca/sites/default/files/legacy/Resources/municipal%20guide-e.pdf\" target=\"_blank\">https://www.ipc.on.ca/sites/default/files/legacy/Resources/municipal%20guide-e.pdf</a>",
+            "Carlini, N., Tramèr, F., Wallace, E., Jagielski, M., Herbert-Voss, A., Lee, K., Roberts, A., Brown, T., Song, D., Erlingsson, U., Oprea, A., & Raffel, C. (2021). Extracting training data from large language models. In 30th USENIX Security Symposium (USENIX Security 21). <a href=\"https://www.usenix.org/system/files/sec21-carlini-extracting.pdf\" target=\"_blank\">https://www.usenix.org/system/files/sec21-carlini-extracting.pdf</a>",
+            "Carlini, N. (2020, December 15). Privacy considerations in large language models. Google Research Blog. <a href=\"https://research.google/blog/privacy-considerations-in-large-language-models/\" target=\"_blank\">https://research.google/blog/privacy-considerations-in-large-language-models/</a>",
+            "City of Ottawa. (n.d.). Access to information and protection of privacy. <a href=\"https://ottawa.ca/en/city-hall/open-transparent-and-accountable-government/access-information-and-protection-privacy\" target=\"_blank\">https://ottawa.ca/en/city-hall/open-transparent-and-accountable-government/access-information-and-protection-privacy</a>",
+            "The Greenlining Institute. (2021). Algorithmic bias explained: How automated decision-making becomes automated discrimination. <a href=\"https://greenlining.org/wp-content/uploads/2021/04/Greenlining-Institute-Algorithmic-Bias-Explained-Report-Feb-2021.pdf\" target=\"_blank\">https://greenlining.org/wp-content/uploads/2021/04/Greenlining-Institute-Algorithmic-Bias-Explained-Report-Feb-2021.pdf</a>",
+            "Krištofík, A. (2025). Bias in AI (supported) decision making: Old problems, new technologies. International Journal for Court Administration. <a href=\"https://doi.org/10.36745/ijca.598\" target=\"_blank\">https://doi.org/10.36745/ijca.598</a>",
+            "Alon-Barkat, S., & Busuioc, M. (2023). Human–AI interactions in public sector decision making: \"Automation bias\" and \"selective adherence\" to algorithmic advice. Journal of Public Administration Research and Theory, 33(1), 153-169. <a href=\"https://doi.org/10.1093/jopart/muac007\" target=\"_blank\">https://doi.org/10.1093/jopart/muac007</a>",
+            "Ada Lovelace Institute. (2021). Algorithmic accountability for the public sector: Learning from the first wave of policy implementation. <a href=\"https://www.adalovelaceinstitute.org/report/algorithmic-accountability-public-sector/\" target=\"_blank\">https://www.adalovelaceinstitute.org/report/algorithmic-accountability-public-sector/</a>",
+            "Dahl, M., Magesh, V., Suzgun, M., & Ho, D. E. (2024). Large legal fictions: Profiling legal hallucinations in large language models. Journal of Legal Analysis, 16(1), 64–93. <a href=\"https://doi.org/10.1093/jla/laae003\" target=\"_blank\">https://doi.org/10.1093/jla/laae003</a>",
+            "Government of Canada. (2025). Algorithmic impact assessment tool. <a href=\"https://www.canada.ca/en/government/system/digital-government/digital-government-innovations/responsible-use-ai/algorithmic-impact-assessment.html\" target=\"_blank\">https://www.canada.ca/en/government/system/digital-government/digital-government-innovations/responsible-use-ai/algorithmic-impact-assessment.html</a>",
+            "Saleiro, P., Kuester, B., Hinkson, L., London, J., Stevens, A., Anisfeld, A., Rodolfa, K. T., & Ghani, R. (2018). Aequitas: A bias and fairness audit toolkit. arXiv. <a href=\"https://arxiv.org/abs/1811.05577\" target=\"_blank\">https://arxiv.org/abs/1811.05577</a>",
+            "Ribeiro, M. T., Singh, S., & Guestrin, C. (2016). \"Why should I trust you?\": Explaining the predictions of any classifier. In Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining (pp. 1135–1144). <a href=\"https://doi.org/10.1145/2939672.2939778\" target=\"_blank\">https://doi.org/10.1145/2939672.2939778</a>"
+          ]
+        }
+      ]
+    }
+  ]
+}
+

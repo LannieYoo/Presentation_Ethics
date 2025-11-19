@@ -1,0 +1,31 @@
+References
+Amazon Web Services. (n.d.). What is RAG (retrieval-augmented generation)? AWS. https://aws.amazon.com/what-is/retrieval-augmented-generation/
+Microsoft. (n.d.). Retrieval augmented generation (RAG) in Azure AI Search. Microsoft Learn. https://learn.microsoft.com/en-us/azure/search/retrieval-augmented-generation-overview
+
+Municipal Freedom of Information and Protection of Privacy Act, R.S.O. 1990, c. M.56 (Ontario). https://www.ontario.ca/laws/statute/90m56
+
+Information and Privacy Commissioner of Ontario. (2014). Ontario’s Municipal Freedom of Information and Protection of Privacy Act: A mini guide. https://www.ipc.on.ca/sites/default/files/legacy/Resources/municipal%20guide-e.pdf
+
+Carlini, N., Tramèr, F., Wallace, E., Jagielski, M., Herbert-Voss, A., Lee, K., Roberts, A., Brown, T., Song, D., Erlingsson, U., Oprea, A., & Raffel, C. (2021). Extracting training data from large language models. In 30th USENIX Security Symposium (USENIX Security 21). https://www.usenix.org/system/files/sec21-carlini-extracting.pdf
+
+Carlini, N. (2020, December 15). Privacy considerations in large language models. Google Research Blog. https://research.google/blog/privacy-considerations-in-large-language-models/
+
+City of Ottawa. (n.d.). Access to information and protection of privacy. https://ottawa.ca/en/city-hall/open-transparent-and-accountable-government/access-information-and-protection-privacy
+
+The Greenlining Institute. (2021). Algorithmic bias explained: How automated decision-making becomes automated discrimination. https://greenlining.org/wp-content/uploads/2021/04/Greenlining-Institute-Algorithmic-Bias-Explained-Report-Feb-2021.pdf
+
+Krištofík, A. (2025). Bias in AI (supported) decision making: Old problems, new technologies. International Journal for Court Administration. https://doi.org/10.36745/ijca.598
+
+Alon-Barkat, S., & Busuioc, M. (2023). Human–AI interactions in public sector decision making: “Automation bias” and “selective adherence” to algorithmic advice. Journal of Public Administration Research and Theory, 33(1), 153-169. https://doi.org/10.1093/jopart/muac007
+
+Ada Lovelace Institute. (2021). Algorithmic accountability for the public sector: Learning from the first wave of policy implementation. https://www.adalovelaceinstitute.org/report/algorithmic-accountability-public-sector/
+
+Dahl, M., Magesh, V., Suzgun, M., & Ho, D. E. (2024). Large legal fictions: Profiling legal hallucinations in large language models. Journal of Legal Analysis, 16(1), 64–93. https://doi.org/10.1093/jla/laae003
+
+Government of Canada. (2025). Algorithmic impact assessment tool. https://www.canada.ca/en/government/system/digital-government/digital-government-innovations/responsible-use-ai/algorithmic-impact-assessment.html
+
+Saleiro, P., Kuester, B., Hinkson, L., London, J., Stevens, A., Anisfeld, A., Rodolfa, K. T., & Ghani, R. (2018). Aequitas: A bias and fairness audit toolkit. arXiv. https://arxiv.org/abs/1811.05577
+
+Ribeiro, M. T., Singh, S., & Guestrin, C. (2016). “Why should I trust you?”: Explaining the predictions of any classifier. In Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining (pp. 1135–1144). https://doi.org/10.1145/2939672.2939778
+
+

@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ethical AI Impact Assessment - Presentation</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Top Navigation Menu -->
+        <nav class="top-nav">
+            <div class="nav-menu">
+                <button onclick="goToSlide(1)" id="nav-1">Home</button>
+                <span class="separator">|</span>
+                <button onclick="goToSlide(2)" id="nav-2">Project Overview</button>
+                <button onclick="goToSlide(3)" id="nav-3">System Background</button>
+                <button onclick="goToSlide(4)" id="nav-4">Risk Analysis</button>
+                <button onclick="goToSlide(5)" id="nav-5">Mitigation Strategies</button>
+                <button onclick="goToSlide(6)" id="nav-6">Conclusion</button>
+                <button onclick="goToSlide(7)" id="nav-7">References</button>
+            </div>
+            <div class="nav-controls">
+                <div class="slide-counter">
+                    <span id="current-slide">1</span> / <span id="total-slides">7</span>
+                </div>
+                <div class="nav-buttons">
+                    <button id="prev-btn" onclick="changeSlide(-1)" class="nav-btn">← Prev</button>
+                    <button id="next-btn" onclick="changeSlide(1)" class="nav-btn">Next →</button>
+                </div>
+            </div>
+        </nav>
+        <div id="slides-container"></div>
+    </div>
+
+    <script>
+        let slidesData = [];
+        let currentSlide = 1;
+        const totalSlides = 7;
+
+        // Helper function to match info-box width to image width
+        function matchInfoBoxWidth(img, infoBox) {
+            const imgWidth = img.offsetWidth || img.naturalWidth;
+            if (imgWidth > 0) {
+                infoBox.style.width = imgWidth + 'px';
+                infoBox.style.maxWidth = imgWidth + 'px';
+            }
+        }
+
+        // Load slides data
+        fetch('data.json')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                slidesData = data.slides;
+                renderSlides();
+                // Initialize navigation after slides are rendered
+                setTimeout(() => {
+                    updateSlideDisplay();
+                    setupKeyboardNavigation();
+                    updateActiveNavItem();
+                    updateNavigationButtons();
+                }, 100);
+            })
+            .catch(error => {
+                console.error('Error loading data.json:', error);
+                const container = document.getElementById('slides-container');
+                container.innerHTML = `<div style="padding: 40px; text-align: center; color: red;">
+                    <h2>Error loading presentation data</h2>
+                    <p>${error.message}</p>
+                    <p>Please make sure data.json file exists and the server is running.</p>
+                </div>`;
+            });
+
+        function renderSlides() {
+            const container = document.getElementById('slides-container');
+            slidesData.forEach((slide, index) => {
+                const slideElement = createSlideElement(slide, index + 1);
+                container.appendChild(slideElement);
+            });
+            // Set first slide as active
+            currentSlide = 1;
+            updateSlideDisplay();
+            updateActiveNavItem();
+            updateNavigationButtons();
+            
+            // Track scroll position to update current slide
+            let scrollTimeout;
+            let isScrolling = false;
+            
+            window.addEventListener('scroll', () => {
+                if (!isScrolling) {
+                    updateCurrentSlideFromScroll();
+                }
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(() => {
+                    updateCurrentSlideFromScroll();
+                    isScrolling = false;
+                }, 50);
+                isScrolling = true;
+            }, { passive: true });
+            
+            // 초기 로드 시에도 업데이트
+            updateCurrentSlideFromScroll();
+        }
+
+        let isScrollingProgrammatically = false;
+        
+        function updateCurrentSlideFromScroll() {
+            // 프로그래밍 방식 스크롤 중일 때는 업데이트하지 않음
+            if (isScrollingProgrammatically) {
+                return;
+            }
+            
+            const slides = document.querySelectorAll('.slide');
+            const scrollPosition = window.scrollY + window.innerHeight / 3; // 화면 상단 1/3 지점 기준
+            
+            let activeSlide = 1;
+            let minDistance = Infinity;
+            
+            slides.forEach((slide, index) => {
+                const slideTop = slide.offsetTop;
+                const slideBottom = slideTop + slide.offsetHeight;
+                const slideCenter = slideTop + slide.offsetHeight / 2;
+                
+                // 현재 보이는 슬라이드 확인
+                if (scrollPosition >= slideTop && scrollPosition < slideBottom) {
+                    const distance = Math.abs(scrollPosition - slideCenter);
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        activeSlide = index + 1;
+                    }
+                }
+            });
+            
+            // 가장 가까운 슬라이드 찾기 (화면에 보이지 않는 경우)
+            if (minDistance === Infinity) {
+                slides.forEach((slide, index) => {
+                    const slideTop = slide.offsetTop;
+                    const slideBottom = slideTop + slide.offsetHeight;
+                    const slideCenter = slideTop + slide.offsetHeight / 2;
+                    const distance = Math.abs(scrollPosition - slideCenter);
+                    
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        activeSlide = index + 1;
+                    }
+                });
+            }
+            
+            if (activeSlide !== currentSlide) {
+                currentSlide = activeSlide;
+                updateSlideDisplay();
+                updateActiveNavItem();
+                updateNavigationButtons();
+            }
+        }
+
+        function createSlideElement(slide, slideNumber) {
+            const section = document.createElement('section');
+            section.className = 'slide';
+            section.setAttribute('data-slide', slideNumber);
+            if (slide.isSlide1) {
+                section.classList.add('slide-1');
+            }
+            if (slide.nameBadge) {
+                section.classList.add('has-name-badge');
+            }
+
+            const contentDiv = document.createElement('div');
+            contentDiv.className = `slide-content ${slide.contentAlign}`;
+            
+
+            if (slide.nameBadge) {
+                const badge = document.createElement('span');
+                badge.className = 'name-badge';
+                badge.textContent = slide.nameBadge;
+                contentDiv.appendChild(badge);
+            }
+
+            slide.sections.forEach(sectionData => {
+                const element = createSectionElement(sectionData, slide.isSlide1);
+                if (element) {
+                    // Check if element has any visible content
+                    const hasContent = element.children.length > 0 || 
+                                      element.textContent.trim().length > 0 ||
+                                      element.querySelector('img') ||
+                                      element.querySelector('table');
+                    if (hasContent) {
+                        contentDiv.appendChild(element);
+                    }
+                }
+            });
+
+            section.appendChild(contentDiv);
+            
+            // For slide-1, match info-box width to image width after rendering
+            if (slide.isSlide1) {
+                setTimeout(() => {
+                    const imageContainer = section.querySelector('.image-container');
+                    const infoBox = section.querySelector('.info-box');
+                    if (imageContainer && infoBox) {
+                        const img = imageContainer.querySelector('img');
+                        if (img) {
+                            // Wait for image to load
+                            if (img.complete) {
+                                matchInfoBoxWidth(img, infoBox);
+                            } else {
+                                img.onload = () => matchInfoBoxWidth(img, infoBox);
+                            }
+                        } else {
+                            // If no img, use image-container width
+                            const containerWidth = imageContainer.offsetWidth;
+                            if (containerWidth > 0) {
+                                infoBox.style.width = containerWidth + 'px';
+                                infoBox.style.maxWidth = containerWidth + 'px';
+                            }
+                        }
+                    }
+                }, 100);
+            }
+            
+            return section;
+        }
+
+        function createSectionElement(section, isSlide1 = false) {
+            const div = document.createElement('div');
+
+            switch(section.type) {
+                case 'image':
+                    const img = document.createElement('img');
+                    img.src = section.src;
+                    img.alt = section.alt || '';
+                    if (section.style) {
+                        img.style.cssText = section.style;
+                    } else {
+                        const imgContainer = document.createElement('div');
+                        imgContainer.className = 'image-container';
+                        imgContainer.appendChild(img);
+                        return imgContainer;
+                    }
+                    return img;
+
+                case 'title':
+                    const h1 = document.createElement('h1');
+                    h1.textContent = section.text;
+                    div.appendChild(h1);
+                    if (section.subtitle) {
+                        const h2 = document.createElement('h2');
+                        h2.className = 'text-3xl text-secondary mb-8';
+                        h2.style.fontWeight = 'normal';
+                        h2.style.border = 'none';
+                        h2.textContent = section.subtitle;
+                        // Center align for slide-1 subtitle
+                        if (isSlide1) {
+                            h2.style.textAlign = 'center';
+                        }
+                        div.appendChild(h2);
+                    }
+                    return div;
+
+                case 'infoBox':
+                    const infoBox = document.createElement('div');
+                    infoBox.className = 'info-box';
+                    if (isSlide1) {
+                        // Initial styles - will be updated to match image width after rendering
+                        infoBox.style.cssText += `
+                            margin-left: auto !important;
+                            margin-right: auto !important;
+                        `;
+                    }
+                    section.items.forEach(item => {
+                        const p = document.createElement('p');
+                        p.className = 'my-3 text-lg';
+                        p.innerHTML = `<strong>${item.label}:</strong> ${item.value}`;
+                        infoBox.appendChild(p);
+                    });
+                    return infoBox;
+
+                case 'grid':
+                    const grid = document.createElement('div');
+                    grid.style.display = 'grid';
+                    grid.style.gridTemplateColumns = `repeat(${section.columns}, 1fr)`;
+                    grid.style.gap = '24px';
+                    grid.style.marginBottom = '24px';
+                    grid.style.alignItems = 'stretch';
+                    section.items.forEach(item => {
+                        const element = createContentBox(item);
+                        if (element) {
+                            // Check if element has content (including img elements)
+                            const hasContent = element.children.length > 0 || 
+                                             element.textContent.trim().length > 0 ||
+                                             element.tagName === 'IMG' ||
+                                             element.querySelector('img');
+                            if (hasContent) {
+                                grid.appendChild(element);
+                            }
+                        }
+                    });
+                    // Only return grid if it has children
+                    return grid.children.length > 0 ? grid : null;
+
+                case 'contentWrapper':
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'content-wrapper';
+                    if (section.marginBottom) {
+                        wrapper.classList.add('mb-8');
+                    }
+                    section.items.forEach(item => {
+                        const element = createContentBox(item);
+                        if (element) {
+                            // Check if element has content
+                            const hasContent = element.children.length > 0 || element.textContent.trim().length > 0;
+                            if (hasContent) {
+                                wrapper.appendChild(element);
+                            }
+                        }
+                    });
+                    // Only return wrapper if it has children
+                    return wrapper.children.length > 0 ? wrapper : null;
+
+                case 'contentBox':
+                    return createContentBox(section);
+
+                case 'heading':
+                    const heading = document.createElement(`h${section.level || 2}`);
+                    heading.className = `text-${section.level === 2 ? '4xl' : '2xl'} mb-6`;
+                    if (section.marginTop) {
+                        heading.classList.add('mt-6');
+                    }
+                    heading.textContent = section.text;
+                    return heading;
+
+                case 'table':
+                    return createTable(section);
+
+                case 'priorityBox':
+                    return createPriorityBox(section);
+
+                case 'references':
+                    const refDiv = document.createElement('div');
+                    refDiv.className = 'references';
+                    const refContent = document.createElement('div');
+                    refContent.className = 'references-content';
+                    section.items.forEach(ref => {
+                        const p = document.createElement('p');
+                        p.innerHTML = ref;
+                        refContent.appendChild(p);
+                    });
+                    refDiv.appendChild(refContent);
+                    return refDiv;
+
+                case 'conclusion':
+                    return createConclusion(section);
+
+                default:
+                    return null;
+            }
+        }
+
+        function createContentBox(box) {
+            // If box is an image type, handle it differently
+            if (box.type === 'image') {
+                const container = document.createElement('div');
+                container.style.display = 'flex';
+                container.style.alignItems = 'center';
+                container.style.justifyContent = 'center';
+                container.style.width = '100%';
+                container.style.height = '100%';
+                container.style.minHeight = '200px';
+                
+                const img = document.createElement('img');
+                img.src = box.src;
+                img.alt = box.alt || '';
+                img.style.width = '100%';
+                img.style.maxWidth = '100%';
+                img.style.height = 'auto';
+                img.style.objectFit = 'contain';
+                img.style.borderRadius = '12px';
+                img.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1)';
+                img.style.border = '2px solid rgba(0, 105, 148, 0.2)';
+                
+                // 인라인 스타일이 있으면 일부만 적용 (max-width 제거)
+                if (box.style) {
+                    const styleObj = box.style.split(';').reduce((acc, rule) => {
+                        const [key, value] = rule.split(':').map(s => s.trim());
+                        if (key && value && key !== 'max-width') {
+                            acc[key] = value;
+                        }
+                        return acc;
+                    }, {});
+                    Object.assign(img.style, styleObj);
+                }
+                
+                container.appendChild(img);
+                return container;
+            }
+
+            const div = document.createElement('div');
+            div.className = 'content-box';
+            if (box.color) {
+                div.classList.add(box.color);
+            }
+            if (box.style) {
+                div.style.cssText = box.style;
+            }
+
+            if (box.title) {
+                // 아이콘과 텍스트 분리
+                const titleText = box.title;
+                const iconMatch = titleText.match(/^([🔒⚖️⚠️🔍🎯📊💡🛡️✅❌]+)\s*(.+)$/);
+                
+                const titleContainer = document.createElement('div');
+                titleContainer.style.display = 'flex';
+                titleContainer.style.alignItems = 'center';
+                titleContainer.style.gap = '12px';
+                titleContainer.style.marginBottom = '16px';
+                
+                if (iconMatch) {
+                    // 아이콘을 제거하고 대신 카테고리 라벨 배지 추가
+                    const categoryLabel = document.createElement('span');
+                    categoryLabel.className = 'category-label';
+                    categoryLabel.style.display = 'inline-block';
+                    categoryLabel.style.padding = '4px 12px';
+                    categoryLabel.style.borderRadius = '4px';
+                    categoryLabel.style.fontSize = '12px';
+                    categoryLabel.style.fontWeight = '600';
+                    categoryLabel.style.textTransform = 'uppercase';
+                    categoryLabel.style.letterSpacing = '0.5px';
+                    
+                    // 아이콘에 따라 카테고리 라벨 설정
+                    const icon = iconMatch[1];
+                    const text = iconMatch[2].trim();
+                    
+                    if (icon.includes('🔒')) {
+                        categoryLabel.textContent = 'Privacy';
+                        categoryLabel.style.background = 'rgba(239, 68, 68, 0.1)';
+                        categoryLabel.style.color = '#dc2626';
+                    } else if (icon.includes('⚖️')) {
+                        categoryLabel.textContent = 'Bias';
+                        categoryLabel.style.background = 'rgba(234, 179, 8, 0.1)';
+                        categoryLabel.style.color = '#ca8a04';
+                    } else if (icon.includes('⚠️')) {
+                        categoryLabel.textContent = 'Accountability';
+                        categoryLabel.style.background = 'rgba(249, 115, 22, 0.1)';
+                        categoryLabel.style.color = '#ea580c';
+                    } else if (icon.includes('🔍')) {
+                        categoryLabel.textContent = 'Transparency';
+                        categoryLabel.style.background = 'rgba(59, 130, 246, 0.1)';
+                        categoryLabel.style.color = '#2563eb';
+                    } else {
+                        categoryLabel.textContent = 'Category';
+                        categoryLabel.style.background = 'rgba(107, 114, 128, 0.1)';
+                        categoryLabel.style.color = '#4b5563';
+                    }
+                    
+                    titleContainer.appendChild(categoryLabel);
+                    
+                    const h3 = document.createElement('h3');
+                    h3.className = box.titleClass || 'text-xl my-5';
+                    h3.style.margin = '0';
+                    h3.style.flex = '1';
+                    if (box.titleStyle) {
+                        h3.style.cssText += box.titleStyle;
+                    }
+                    h3.innerHTML = text;
+                    titleContainer.appendChild(h3);
+                } else {
+                    // 아이콘이 없는 경우: 기존 방식
+                    const h3 = document.createElement('h3');
+                    h3.className = box.titleClass || 'text-xl my-5';
+                    h3.style.margin = '0';
+                    if (box.titleStyle) {
+                        h3.style.cssText = box.titleStyle;
+                    }
+                    h3.innerHTML = box.title;
+                    titleContainer.appendChild(h3);
+                }
+                
+                div.appendChild(titleContainer);
+            }
+
+            if (box.content) {
+                const p = document.createElement('p');
+                p.className = box.contentClass || 'text-base';
+                p.innerHTML = box.content;
+                div.appendChild(p);
+            }
+
+            if (box.items && Array.isArray(box.items)) {
+                if (box.listType) {
+                    const list = document.createElement(box.listType);
+                    list.className = 'text-base';
+                    list.style.marginLeft = '20px';
+                    list.style.lineHeight = '1.75';
+                    if (box.textAlign) {
+                        list.style.textAlign = box.textAlign;
+                    }
+                    box.items.forEach(item => {
+                        const li = document.createElement('li');
+                        li.className = 'my-3';
+                        if (box.textAlign) {
+                            li.style.textAlign = box.textAlign;
+                        }
+                        if (typeof item === 'string') {
+                            li.innerHTML = item;
+                        } else if (item.label && item.text) {
+                            li.innerHTML = `<strong>${item.label}:</strong> ${item.text}`;
+                        }
+                        list.appendChild(li);
+                    });
+                    div.appendChild(list);
+                } else {
+                    box.items.forEach(item => {
+                        if (item.label && item.text) {
+                            const p = document.createElement('p');
+                            p.className = 'my-2 text-base';
+                            p.style.textAlign = box.textAlign || 'left';
+                            p.innerHTML = `<strong>${item.label}:</strong> ${item.text}`;
+                            div.appendChild(p);
+                        }
+                    });
+                }
+            }
+
+            if (box.flowDiagram) {
+                const flowDiv = document.createElement('div');
+                flowDiv.className = 'flow-diagram';
+                box.flowDiagram.steps.forEach((step, index) => {
+                    if (index > 0) {
+                        const arrow = document.createElement('span');
+                        arrow.className = 'flow-arrow';
+                        arrow.textContent = '→';
+                        flowDiv.appendChild(arrow);
+                    }
+                    const stepDiv = document.createElement('div');
+                    stepDiv.className = 'flow-step';
+                    stepDiv.innerHTML = `${step.title}<br><small>${step.subtitle}</small>`;
+                    flowDiv.appendChild(stepDiv);
+                });
+                div.appendChild(flowDiv);
+
+                if (box.image) {
+                    const imgDiv = document.createElement('div');
+                    imgDiv.style.marginTop = '16px';
+                    const img = document.createElement('img');
+                    img.src = box.image.src;
+                    img.alt = box.image.alt || '';
+                    imgDiv.appendChild(img);
+                    if (box.image.caption) {
+                        const caption = document.createElement('p');
+                        caption.className = 'image-caption';
+                        caption.textContent = box.image.caption;
+                        imgDiv.appendChild(caption);
+                    }
+                    div.appendChild(imgDiv);
+                }
+            }
+
+            if (box.footer) {
+                const footer = document.createElement('p');
+                footer.style.marginTop = '12px';
+                footer.style.paddingTop = '12px';
+                footer.style.borderTop = '1px solid rgba(37, 99, 235, 0.2)';
+                footer.style.fontSize = '14px';
+                footer.style.color = '#4b5563';
+                footer.textContent = box.footer;
+                div.appendChild(footer);
+            }
+
+            // Check if the content box has any content, if not, return null
+            if (!box.title && !box.content && (!box.items || box.items.length === 0) && !box.flowDiagram && !box.footer) {
+                return null;
+            }
+
+            return div;
+        }
+
+        function createTable(table) {
+            const container = document.createElement('div');
+            container.className = 'table-container';
+            const tableEl = document.createElement('table');
+            
+            const thead = document.createElement('thead');
+            const headerRow = document.createElement('tr');
+            table.headers.forEach(header => {
+                const th = document.createElement('th');
+                th.textContent = header;
+                headerRow.appendChild(th);
+            });
+            thead.appendChild(headerRow);
+            tableEl.appendChild(thead);
+
+            const tbody = document.createElement('tbody');
+            table.rows.forEach(row => {
+                const tr = document.createElement('tr');
+                if (row.highlight) {
+                    tr.classList.add('highlight');
+                }
+                tr.innerHTML = `
+                    <td>${row.id}</td>
+                    <td>${row.description}</td>
+                    <td><span class="badge ${row.likelihood.toLowerCase()}">${row.likelihood}</span></td>
+                    <td><span class="badge ${row.impact.toLowerCase()}">${row.impact}</span></td>
+                `;
+                tbody.appendChild(tr);
+            });
+            tableEl.appendChild(tbody);
+            container.appendChild(tableEl);
+            return container;
+        }
+
+        function createPriorityBox(box) {
+            const div = document.createElement('div');
+            div.className = 'priority-box';
+            div.style.textAlign = 'left';
+            const p = document.createElement('p');
+            p.style.textAlign = 'left';
+            p.innerHTML = `<strong>${box.title}:</strong>`;
+            div.appendChild(p);
+            const ul = document.createElement('ul');
+            ul.style.marginLeft = '20px';
+            ul.style.marginTop = '8px';
+            ul.style.textAlign = 'left';
+            box.items.forEach(item => {
+                const li = document.createElement('li');
+                li.style.textAlign = 'left';
+                li.innerHTML = item;
+                ul.appendChild(li);
+            });
+            div.appendChild(ul);
+            return div;
+        }
+
+        function createConclusion(conclusion) {
+            const div = document.createElement('div');
+            div.style.flex = '1';
+            div.style.display = 'flex';
+            div.style.flexDirection = 'column';
+            div.style.justifyContent = 'space-around';
+
+            // Summary
+            const summaryDiv = document.createElement('div');
+            summaryDiv.style.textAlign = 'left';
+            const h3 = document.createElement('h3');
+            h3.className = 'text-2xl text-secondary my-5';
+            h3.style.textAlign = 'left';
+            h3.textContent = conclusion.summary.title;
+            summaryDiv.appendChild(h3);
+            const p = document.createElement('p');
+            p.className = 'text-lg mb-5';
+            p.style.textAlign = 'left';
+            p.innerHTML = conclusion.summary.text;
+            summaryDiv.appendChild(p);
+            const grid = document.createElement('div');
+            grid.className = 'conclusion-grid';
+            conclusion.summary.boxes.forEach(box => {
+                const boxDiv = document.createElement('div');
+                boxDiv.className = 'conclusion-box';
+                
+                // 아이콘 제거하고 타이틀에 배경색 추가
+                const titleDiv = document.createElement('div');
+                titleDiv.className = 'conclusion-box-title';
+                titleDiv.style.padding = '12px 16px';
+                titleDiv.style.marginBottom = '12px';
+                titleDiv.style.borderRadius = '4px';
+                titleDiv.style.fontWeight = '600';
+                titleDiv.style.fontSize = '18px';
+                
+                // 아이콘에 따라 배경색 설정
+                if (box.icon && box.icon.includes('🔒')) {
+                    titleDiv.style.background = 'rgba(239, 68, 68, 0.15)';
+                    titleDiv.style.color = '#dc2626';
+                } else if (box.icon && box.icon.includes('⚖️')) {
+                    titleDiv.style.background = 'rgba(234, 179, 8, 0.15)';
+                    titleDiv.style.color = '#ca8a04';
+                } else if (box.icon && box.icon.includes('⚠️')) {
+                    titleDiv.style.background = 'rgba(249, 115, 22, 0.15)';
+                    titleDiv.style.color = '#ea580c';
+                } else {
+                    titleDiv.style.background = 'rgba(107, 114, 128, 0.15)';
+                    titleDiv.style.color = '#4b5563';
+                }
+                
+                titleDiv.innerHTML = `<strong>${box.title}</strong>`;
+                boxDiv.appendChild(titleDiv);
+                
+                const textDiv = document.createElement('div');
+                textDiv.style.fontSize = '16px';
+                textDiv.style.lineHeight = '1.6';
+                textDiv.style.color = '#374151';
+                textDiv.style.padding = '0 16px 16px 16px';
+                textDiv.textContent = box.text;
+                boxDiv.appendChild(textDiv);
+                
+                grid.appendChild(boxDiv);
+            });
+            summaryDiv.appendChild(grid);
+            div.appendChild(summaryDiv);
+
+            // Requirements
+            const reqDiv = document.createElement('div');
+            reqDiv.className = 'content-box blue';
+            reqDiv.style.margin = '20px 0';
+            reqDiv.style.textAlign = 'left';
+            const reqH3 = document.createElement('h3');
+            reqH3.className = 'text-2xl text-secondary my-3';
+            reqH3.textContent = conclusion.requirements.title;
+            reqDiv.appendChild(reqH3);
+            const reqP = document.createElement('p');
+            reqP.className = 'mb-3';
+            reqP.innerHTML = conclusion.requirements.text;
+            reqDiv.appendChild(reqP);
+            const ol = document.createElement('ol');
+            ol.style.marginLeft = '20px';
+            ol.style.lineHeight = '1.75';
+            conclusion.requirements.items.forEach(item => {
+                const li = document.createElement('li');
+                li.className = 'my-2';
+                li.textContent = item;
+                ol.appendChild(li);
+            });
+            reqDiv.appendChild(ol);
+            div.appendChild(reqDiv);
+
+            // Final Recommendations
+            if (conclusion.finalRecommendations) {
+                const finalRecDiv = document.createElement('div');
+                finalRecDiv.className = 'content-box blue';
+                finalRecDiv.style.margin = '20px 0';
+                finalRecDiv.style.textAlign = 'left';
+                const finalRecH3 = document.createElement('h3');
+                finalRecH3.className = 'text-2xl text-secondary my-3';
+                finalRecH3.textContent = conclusion.finalRecommendations.title;
+                finalRecDiv.appendChild(finalRecH3);
+                const finalRecOl = document.createElement('ol');
+                finalRecOl.style.marginLeft = '20px';
+                finalRecOl.style.lineHeight = '1.75';
+                conclusion.finalRecommendations.items.forEach(item => {
+                    const li = document.createElement('li');
+                    li.className = 'my-2';
+                    li.textContent = item;
+                    finalRecOl.appendChild(li);
+                });
+                finalRecDiv.appendChild(finalRecOl);
+                div.appendChild(finalRecDiv);
+            }
+
+            // Closing
+            if (conclusion.closing) {
+                const closingDiv = document.createElement('div');
+                closingDiv.className = 'mt-8';
+                const closingH2 = document.createElement('h2');
+                closingH2.className = 'text-4xl text-primary';
+                closingH2.style.border = 'none';
+                closingH2.textContent = conclusion.closing.title;
+                closingDiv.appendChild(closingH2);
+                if (conclusion.closing.subtitle) {
+                    const closingP = document.createElement('p');
+                    closingP.className = 'text-2xl text-gray-600 mt-3';
+                    closingP.textContent = conclusion.closing.subtitle;
+                    closingDiv.appendChild(closingP);
+                }
+                div.appendChild(closingDiv);
+            }
+
+
+            return div;
+        }
+
+        function showSlide(slideNumber) {
+            const slideElement = document.querySelector(`.slide[data-slide="${slideNumber}"]`);
+            if (slideElement) {
+                // Calculate the position with 100px offset for menu bar
+                const elementPosition = slideElement.getBoundingClientRect().top + window.pageYOffset;
+                const offsetPosition = elementPosition - 100;
+                
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
+                
+                // Add active class for styling
+                document.querySelectorAll('.slide').forEach(slide => {
+                    slide.classList.remove('active');
+                });
+                slideElement.classList.add('active');
+            }
+            currentSlide = slideNumber;
+            updateSlideDisplay();
+            updateActiveNavItem();
+            updateNavigationButtons();
+        }
+
+        function updateSlideDisplay() {
+            const currentSlideEl = document.getElementById('current-slide');
+            const totalSlidesEl = document.getElementById('total-slides');
+            if (currentSlideEl) currentSlideEl.textContent = currentSlide;
+            if (totalSlidesEl) totalSlidesEl.textContent = totalSlides;
+        }
+
+        function updateActiveNavItem() {
+            // Reset all nav items
+            for (let i = 1; i <= 7; i++) {
+                const element = document.getElementById(`nav-${i}`);
+                if (element) {
+                    element.classList.remove('bold');
+                    element.classList.remove('active');
+                    element.style.fontWeight = '600';
+                    element.style.background = 'none';
+                }
+            }
+            
+            // Set active nav item based on current slide
+            const activeNavId = `nav-${currentSlide}`;
+            const element = document.getElementById(activeNavId);
+            if (element) {
+                element.style.fontWeight = '700';
+                element.classList.add('bold');
+                element.classList.add('active');
+            }
+        }
+
+        function updateNavigationButtons() {
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            if (prevBtn) prevBtn.disabled = currentSlide === 1;
+            if (nextBtn) nextBtn.disabled = currentSlide === totalSlides;
+        }
+
+        function changeSlide(direction) {
+            const newSlide = currentSlide + direction;
+            if (newSlide < 1 || newSlide > totalSlides) {
+                return;
+            }
+            // 클릭 시점에 즉시 활성화 상태로 변경
+            currentSlide = newSlide;
+            updateSlideDisplay();
+            updateActiveNavItem();
+            updateNavigationButtons();
+            
+            // 프로그래밍 방식 스크롤 시작
+            isScrollingProgrammatically = true;
+            
+            // 스크롤 이동
+            const slideElement = document.querySelector(`.slide[data-slide="${newSlide}"]`);
+            if (slideElement) {
+                const elementPosition = slideElement.getBoundingClientRect().top + window.pageYOffset;
+                const offsetPosition = elementPosition - 100;
+                
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
+                
+                // 슬라이드 active 클래스 업데이트
+                document.querySelectorAll('.slide').forEach(slide => {
+                    slide.classList.remove('active');
+                });
+                slideElement.classList.add('active');
+                
+                // 스크롤 완료 후 플래그 해제
+                setTimeout(() => {
+                    isScrollingProgrammatically = false;
+                }, 1000);
+            }
+        }
+
+        function goToSlide(slideNumber) {
+            if (slideNumber < 1 || slideNumber > totalSlides) {
+                return;
+            }
+            // 클릭 시점에 즉시 활성화 상태로 변경
+            currentSlide = slideNumber;
+            updateSlideDisplay();
+            updateActiveNavItem();
+            updateNavigationButtons();
+            
+            // 프로그래밍 방식 스크롤 시작
+            isScrollingProgrammatically = true;
+            
+            // 스크롤 이동
+            const slideElement = document.querySelector(`.slide[data-slide="${slideNumber}"]`);
+            if (slideElement) {
+                const elementPosition = slideElement.getBoundingClientRect().top + window.pageYOffset;
+                const offsetPosition = elementPosition - 100;
+                
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
+                
+                // 슬라이드 active 클래스 업데이트
+                document.querySelectorAll('.slide').forEach(slide => {
+                    slide.classList.remove('active');
+                });
+                slideElement.classList.add('active');
+                
+                // 스크롤 완료 후 플래그 해제 (약간의 지연 후)
+                setTimeout(() => {
+                    isScrollingProgrammatically = false;
+                }, 1000);
+            }
+        }
+
+        function setupKeyboardNavigation() {
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                    changeSlide(-1);
+                } else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                    changeSlide(1);
+                } else if (e.key === 'Home') {
+                    goToSlide(1);
+                } else if (e.key === 'End') {
+                    goToSlide(totalSlides);
+                }
+            });
+        }
+
+        // Make functions global for onclick handlers
+        window.changeSlide = changeSlide;
+        window.goToSlide = goToSlide;
+    </script>
+</body>
+</html>
