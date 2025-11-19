@@ -741,6 +741,26 @@ a:hover {
     margin: 32px 0;
 }
 
+/* 2페이지 반응형 레이아웃 - 작은 화면에서 이미지를 상단, 텍스트를 하단으로 */
+@media (max-width: 1400px) {
+    .slide[data-slide="2"] .slide-2-grid {
+        display: flex !important;
+        flex-direction: column !important;
+    }
+    
+    /* 이미지 컨테이너를 첫 번째로 (상단) */
+    .slide[data-slide="2"] .slide-2-grid > .slide-2-image,
+    .slide[data-slide="2"] .slide-2-grid > div.slide-2-image {
+        order: 1 !important;
+    }
+    
+    /* 텍스트 content-box를 두 번째로 (하단) */
+    .slide[data-slide="2"] .slide-2-grid > .slide-2-text,
+    .slide[data-slide="2"] .slide-2-grid > .content-box.slide-2-text {
+        order: 2 !important;
+    }
+}
+
 .conclusion-box {
     background: #f9fafb;
     padding: 0;

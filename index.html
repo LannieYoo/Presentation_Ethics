@@ -183,7 +183,7 @@
             }
 
             slide.sections.forEach(sectionData => {
-                const element = createSectionElement(sectionData, slide.isSlide1);
+                const element = createSectionElement(sectionData, slide.isSlide1, slideNumber);
                 if (element) {
                     // Check if element has any visible content
                     const hasContent = element.children.length > 0 || 
@@ -227,7 +227,7 @@
             return section;
         }
 
-        function createSectionElement(section, isSlide1 = false) {
+        function createSectionElement(section, isSlide1 = false, slideNumber = null) {
             const div = document.createElement('div');
 
             switch(section.type) {
@@ -288,7 +288,13 @@
                     grid.style.gap = '24px';
                     grid.style.marginBottom = '24px';
                     grid.style.alignItems = 'stretch';
-                    section.items.forEach(item => {
+                    
+                    // 2페이지의 grid에 특별한 클래스 추가
+                    if (slideNumber === 2) {
+                        grid.classList.add('slide-2-grid');
+                    }
+                    
+                    section.items.forEach((item, itemIndex) => {
                         const element = createContentBox(item);
                         if (element) {
                             // Check if element has content (including img elements)
@@ -297,6 +303,14 @@
                                              element.tagName === 'IMG' ||
                                              element.querySelector('img');
                             if (hasContent) {
+                                // 2페이지에서 이미지 요소에 order 클래스 추가
+                                if (slideNumber === 2 && (item.type === 'image' || element.querySelector('img'))) {
+                                    element.classList.add('slide-2-image');
+                                }
+                                // 2페이지에서 텍스트 content-box에 order 클래스 추가
+                                if (slideNumber === 2 && item.type === 'contentBox') {
+                                    element.classList.add('slide-2-text');
+                                }
                                 grid.appendChild(element);
                             }
                         }
