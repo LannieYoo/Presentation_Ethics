@@ -741,7 +741,7 @@
             reqDiv.appendChild(ol);
             div.appendChild(reqDiv);
 
-            // Final Recommendations
+            // Final Recommendations (Implementation Priorities)
             if (conclusion.finalRecommendations) {
                 const finalRecDiv = document.createElement('div');
                 finalRecDiv.className = 'content-box blue';
@@ -763,25 +763,6 @@
                 finalRecDiv.appendChild(finalRecOl);
                 div.appendChild(finalRecDiv);
             }
-
-            // Closing
-            if (conclusion.closing) {
-                const closingDiv = document.createElement('div');
-                closingDiv.className = 'mt-8';
-                const closingH2 = document.createElement('h2');
-                closingH2.className = 'text-4xl text-primary';
-                closingH2.style.border = 'none';
-                closingH2.textContent = conclusion.closing.title;
-                closingDiv.appendChild(closingH2);
-                if (conclusion.closing.subtitle) {
-                    const closingP = document.createElement('p');
-                    closingP.className = 'text-2xl text-gray-600 mt-3';
-                    closingP.textContent = conclusion.closing.subtitle;
-                    closingDiv.appendChild(closingP);
-                }
-                div.appendChild(closingDiv);
-            }
-
 
             return div;
         }
